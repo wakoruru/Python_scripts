@@ -4,11 +4,17 @@
 import serial
 import time
 
-print u"port >>>"
+print u"port? (Default is /dev/ttyUSB0)"
 port = raw_input()
 
-print u"baud rate >>>"
+if not port:
+    port = '/dev/ttyUSB0'
+
+print u"baudrate? (Default is 115200)"
 rate = raw_input()
+
+if not rate:
+    rate = 115200
 
 myserial = serial.Serial(port,rate,timeout=0)
 
@@ -43,10 +49,11 @@ while True:
             shapelist.reverse()
             #print shapelist
             try:
-                Enc1=ord(shapelist[1][3])+(ord(shapelist[1][4])<<8)
-                Enc2=ord(shapelist[1][5])+(ord(shapelist[1][6])<<8)
-                Enc3=ord(shapelist[1][7])+(ord(shapelist[1][8])<<8)
-                print Enc1,Enc2,Enc3
+                if shapelist[1][2]=='\xee':
+                    Enc1=ord(shapelist[1][3])+(ord(shapelist[1][4])<<8)
+                    Enc2=ord(shapelist[1][5])+(ord(shapelist[1][6])<<8)
+                    Enc3=ord(shapelist[1][7])+(ord(shapelist[1][8])<<8)
+                    print Enc1,Enc2,Enc3
             except IndexError:
                 A=0
     except KeyboardInterrupt:
